@@ -36,42 +36,67 @@ The goals / steps of this project are the following:
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+You're reading it! and please find attached along with this submission jupyter notebook Traffic_Sign_Classifier.ipynb which contains the entire code. 
 
 ###Data Set Summary & Exploration
 
-####1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
-
-I used the pandas library to calculate summary statistics of the traffic
+####1. Provide a basic summary of the data set. 
+I used the numpy library to calculate summary statistics of the traffic
 signs data set:
 
-* The size of training set is ?
-* The size of the validation set is ?
-* The size of test set is ?
-* The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
+* The size of training set is 34799
+* The size of the validation set is 4410 
+* The size of test set is 12630
+* The shape of a traffic sign image is (32,32,3)
+* The number of unique classes/labels in the data set is 43
 
 ####2. Include an exploratory visualization of the dataset.
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+Here is an exploratory visualization of the data set. The image below presents the sample distrubtion for the 43 classes across training, test and validation datasets
 
-![alt text][image1]
+![Sample Distribution]({{site.baseurl}}//SampleDistribution.png)
+
+Further, an exploration on which traffic signals have minimum sample vs maximum sample yeilded the following results:
+
+* There were three classes namely, 'Speed limit (20km/h)', 'Dangerous curve to the left', 'Go straight or left' which had a sample size of 270 images only
+* 'Speed limit (50km/h)' is the sign class with maximum representation of nearly 3000 images in all 
+
+Further analyzing the distributional difference across sign classes, there seem to be three broad buckets of sample distribution, high, medium and low sample representation of sign classes 
+
+* Near about 10 classes had a high sample representation around 2500 to 3000 samples per class
+* Next set of 9 classes had a medium sample representation with 1500 to 2000 samples per class
+* The lower order sign classes each had under 1000 samples per class and almost had a uniform distribution with minimum being 200 samples and maximum of 1000 samples per sign
+
 
 ###Design and Test a Model Architecture
 
 ####1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
 
-As a first step, I decided to convert the images to grayscale because ...
+1. Training-Validation split 
+As observed from the initial statistics of the given data, the training data forms around 89% of the (training + validation) mixture which could lead to overfitting while training the neural network. Further, the sample distribution of classes in training and validation datasets require to  similar for us to guarantee a high validation accuracy. 
+
+This was achieved by first concatenating all the training and validation datasets, shuffling them 
+and creating an 80-20% split. 
+
+As a result, the modified datasets were
+* Number of training samples : 31468
+* Number of validation samples: 7841
+
+2. Grayscale conversion  and Image Augmentation 
+The entire model was training originally with (32,32,3) images without any dropout layer first. This had a very high validation accuracy of 97% and test accuracy of 89%. However, when the network was used on images downloaded from the web, the classification accuracy was as low as 50% 
+
+Further investigating in to the sample images available in training, validation and test data and comparing them against the images downloaded from the web, couple of things were apparent, 
+
+The images in the given dataset were not as sharp as the downloaded images and were also subject to different lighting (sunlight vs night etc). 
+
+In order to remove these biases while training the model, the dataset samples were sharpened using histogram equalization technique after converting the image to gray scale.  As a part of this image sharpening method, the images were also normalized. 
+
+The same preprocessing techniques were also applied to the test images downloaded from the web for processing. 
 
 Here is an example of a traffic sign image before and after grayscaling.
 
-![alt text][image2]
+3. Data Augmentation
 
-As a last step, I normalized the image data because ...
-
-I decided to generate additional data because ... 
-
-To add more data to the the data set, I used the following techniques because ... 
 
 Here is an example of an original image and an augmented image:
 
@@ -167,5 +192,3 @@ For the second image ...
 
 ### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 ####1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
-
-
